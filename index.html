@@ -68,6 +68,45 @@
   .company-card.old { border-top: 3px solid var(--old); }
   .company-card.new { border-top: 3px solid var(--new); }
 
+  .mode-toggle {
+    display: inline-flex;
+    gap: 0.1rem;
+    background: #f0efe9;
+    border-radius: 6px;
+    padding: 0.15rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+
+  .mode-toggle label {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .mode-toggle input { display: none; }
+  .mode-toggle label:has(input:checked) {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  .base-mode-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+  }
+
+  .base-mode-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
   .company-card h2 {
     font-size: 0.9rem;
     font-weight: 700;
@@ -412,7 +451,13 @@
   <div class="input-section">
     <!-- Old Company (locked) -->
     <div class="company-card old">
-      <h2><span class="dot"></span>晨北 <span style="font-size:0.65rem;color:var(--muted);font-weight:400;margin-left:0.25rem">（固定）</span></h2>
+      <h2 style="justify-content:space-between">
+        <span><span class="dot"></span>晨北</span>
+        <span class="mode-toggle">
+          <label><input type="radio" name="o_mode" value="default" checked onchange="toggleOldMode()"> 默认</label>
+          <label><input type="radio" name="o_mode" value="custom" onchange="toggleOldMode()"> 自定义</label>
+        </span>
+      </h2>
       <div class="basic-row">
         <div class="fg">
           <label>月薪 Base</label>
@@ -447,7 +492,7 @@
       <div class="basic-row">
         <div class="fg">
           <label>月薪 Base</label>
-          <input type="number" id="n_base" value="41015" step="100">
+          <input type="number" id="n_base" value="42000" step="100">
         </div>
         <div class="fg">
           <label>年终奖（月数）</label>
@@ -459,15 +504,23 @@
           <span class="unit">元/月（租房）</span>
         </div>
       </div>
+      <div class="base-mode-bar">
+        <span class="base-mode-label">缴费基数</span>
+        <span class="mode-toggle">
+          <label><input type="radio" name="n_base_mode" value="5000" onchange="syncNewInsuranceBase();calculate()"> 5,000</label>
+          <label><input type="radio" name="n_base_mode" value="50" checked onchange="syncNewInsuranceBase();calculate()"> 50%</label>
+          <label><input type="radio" name="n_base_mode" value="100" onchange="syncNewInsuranceBase();calculate()"> 100%</label>
+        </span>
+      </div>
       <table class="ins-table">
         <thead><tr><th>项目</th><th>缴费基数</th><th>个人%</th><th>单位%</th></tr></thead>
         <tbody>
-          <tr><td>养老</td><td><input id="n_pen_b" type="number" value="5000"></td><td><input id="n_pen_p" type="number" value="8" step="0.1"></td><td><input id="n_pen_e" type="number" value="17" step="0.1"></td></tr>
-          <tr><td>医疗</td><td><input id="n_med_b" type="number" value="5000"></td><td><input id="n_med_p" type="number" value="2" step="0.1"></td><td><input id="n_med_e" type="number" value="6" step="0.1"></td></tr>
-          <tr><td>失业</td><td><input id="n_unemp_b" type="number" value="5000"></td><td><input id="n_unemp_p" type="number" value="0.2" step="0.1"></td><td><input id="n_unemp_e" type="number" value="0.8" step="0.1"></td></tr>
-          <tr><td>工伤</td><td><input id="n_inj_b" type="number" value="5000"></td><td><input id="n_inj_p" type="number" value="0" step="0.1"></td><td><input id="n_inj_e" type="number" value="0.4" step="0.1"></td></tr>
-          <tr><td>生育</td><td><input id="n_mat_b" type="number" value="5000"></td><td><input id="n_mat_p" type="number" value="0.2" step="0.1"></td><td><input id="n_mat_e" type="number" value="0.5" step="0.1"></td></tr>
-          <tr><td style="font-weight:700">公积金</td><td><input id="n_gjj_b" type="number" value="5000"></td><td colspan="2" style="text-align:center"><input id="n_gjj_r" type="number" value="5" step="0.5" style="width:60%; text-align:center"> <span style="font-size:0.72rem;color:var(--muted)">%（个人=单位）</span></td></tr>
+          <tr><td>养老</td><td><input id="n_pen_b" type="number" readonly></td><td><input id="n_pen_p" type="number" value="8" readonly></td><td><input id="n_pen_e" type="number" value="17" readonly></td></tr>
+          <tr><td>医疗</td><td><input id="n_med_b" type="number" readonly></td><td><input id="n_med_p" type="number" value="2" readonly></td><td><input id="n_med_e" type="number" value="6" readonly></td></tr>
+          <tr><td>失业</td><td><input id="n_unemp_b" type="number" readonly></td><td><input id="n_unemp_p" type="number" value="0.2" readonly></td><td><input id="n_unemp_e" type="number" value="0.8" readonly></td></tr>
+          <tr><td>工伤</td><td><input id="n_inj_b" type="number" readonly></td><td><input id="n_inj_p" type="number" value="0" readonly></td><td><input id="n_inj_e" type="number" value="0.4" readonly></td></tr>
+          <tr><td>生育</td><td><input id="n_mat_b" type="number" readonly></td><td><input id="n_mat_p" type="number" value="0.2" readonly></td><td><input id="n_mat_e" type="number" value="0.5" readonly></td></tr>
+          <tr><td style="font-weight:700">公积金</td><td><input id="n_gjj_b" type="number" readonly></td><td colspan="2" style="text-align:center"><input id="n_gjj_r" type="number" value="5" readonly style="width:60%; text-align:center"> <span style="font-size:0.72rem;color:var(--muted)">%（个人=单位）</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -523,6 +576,31 @@ function bonusTax(bonus) {
 function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function fmt(n) { return n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function fmtI(n) { return Math.round(n).toLocaleString('zh-CN'); }
+
+const OLD_DEFAULTS = {
+  o_base: 31550, o_bonus: 3, o_special: 1500,
+  o_pen_b: 27549, o_pen_p: 8, o_pen_e: 17,
+  o_med_b: 31020, o_med_p: 2, o_med_e: 6,
+  o_unemp_b: 31020, o_unemp_p: 0.2, o_unemp_e: 0.8,
+  o_inj_b: 31020, o_inj_p: 0, o_inj_e: 0.4,
+  o_mat_b: 31020, o_mat_p: 0.2, o_mat_e: 0.5,
+  o_gjj_b: 40906, o_gjj_r: 7,
+};
+
+function toggleOldMode() {
+  const isDefault = document.querySelector('input[name="o_mode"]:checked').value === 'default';
+  const card = document.querySelector('.company-card.old');
+  const inputs = card.querySelectorAll('input[type="number"]');
+  inputs.forEach(inp => {
+    if (isDefault) {
+      if (OLD_DEFAULTS[inp.id] !== undefined) inp.value = OLD_DEFAULTS[inp.id];
+      inp.readOnly = true;
+    } else {
+      inp.readOnly = false;
+    }
+  });
+  calculate();
+}
 
 function calcCompany(prefix) {
   const p = prefix;
@@ -671,16 +749,30 @@ function calculate() {
     <th style="width:18%">变化</th>
   </tr></thead><tbody>`;
 
+  html += sectionRow('税前收入');
+
+  const oPreCash = o.annualGross;
+  const nPreCash = n.annualGross;
+  html += row('base收入', oPreCash, nPreCash, { isKey: true });
+
+  const oPreCashGjj = oPreCash + o.annualEmployerGjj;
+  const nPreCashGjj = nPreCash + n.annualEmployerGjj;
+  html += row('base收入 + 公积金（单位缴纳）', oPreCashGjj, nPreCashGjj, { isKey: true });
+
+  const oPreCashAll = oPreCash + o.annualEmployerContributions;
+  const nPreCashAll = nPreCash + n.annualEmployerContributions;
+  html += row('base收入 + 五险一金（单位缴纳）', oPreCashAll, nPreCashAll, { isKey: true });
+
   html += sectionRow('税后收入');
-  html += row('现金（含个人缴纳公积金）', o.annualCash, n.annualCash, { isKey: true });
+  html += row('base收入', o.annualCash, n.annualCash, { isKey: true });
 
   const oCashGjj = o.annualCash + o.annualEmployerGjj;
   const nCashGjj = n.annualCash + n.annualEmployerGjj;
-  html += row('现金 + 公积金（单位缴纳）', oCashGjj, nCashGjj, { isKey: true });
+  html += row('base收入 + 公积金（单位缴纳）', oCashGjj, nCashGjj, { isKey: true });
 
   const oCashAll = o.annualCash + o.annualEmployerContributions;
   const nCashAll = n.annualCash + n.annualEmployerContributions;
-  html += row('现金 + 五险一金（单位缴纳）', oCashAll, nCashAll, { isKey: true });
+  html += row('base收入 + 五险一金（单位缴纳）', oCashAll, nCashAll, { isKey: true });
 
   html += sectionRow('五险一金（单位缴纳）');
   html += row('五险', o.annualEmployerInsurance, n.annualEmployerInsurance, { isKey: true });
@@ -691,7 +783,23 @@ function calculate() {
   document.getElementById('cmpTable').innerHTML = html;
 }
 
-document.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', calculate));
+function syncNewInsuranceBase() {
+  const mode = document.querySelector('input[name="n_base_mode"]:checked').value;
+  const salary = v('n_base');
+  let base;
+  if (mode === '5000') base = 5000;
+  else if (mode === '100') base = Math.round(salary);
+  else base = Math.round(salary * 0.5);
+  ['n_pen_b','n_med_b','n_unemp_b','n_inj_b','n_mat_b','n_gjj_b'].forEach(id => {
+    document.getElementById(id).value = base;
+  });
+}
+
+document.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', () => {
+  syncNewInsuranceBase();
+  calculate();
+}));
+syncNewInsuranceBase();
 calculate();
 </script>
 </body>
