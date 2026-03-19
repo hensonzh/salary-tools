@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>路特薪酬方案设计辅助工具</title>
+<title>个税计算对比工具</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -68,45 +68,6 @@
   .company-card.old { border-top: 3px solid var(--old); }
   .company-card.new { border-top: 3px solid var(--new); }
 
-  .mode-toggle {
-    display: inline-flex;
-    gap: 0.1rem;
-    background: #f0efe9;
-    border-radius: 6px;
-    padding: 0.15rem;
-    font-size: 0.72rem;
-    font-weight: 500;
-  }
-
-  .mode-toggle label {
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .mode-toggle input { display: none; }
-  .mode-toggle label:has(input:checked) {
-    background: var(--surface);
-    color: var(--text);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-  }
-
-  .base-mode-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.6rem;
-  }
-
-  .base-mode-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted);
-  }
-
   .company-card h2 {
     font-size: 0.9rem;
     font-weight: 700;
@@ -128,6 +89,10 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 0.75rem;
     margin-bottom: 1rem;
+  }
+
+  .basic-row.basic-row-2col {
+    grid-template-columns: 1fr 1fr;
   }
 
   .fg { display: flex; flex-direction: column; gap: 0.15rem; }
@@ -168,6 +133,75 @@
   }
   .ins-table input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37,99,235,0.08); }
   .ins-table input[readonly] { background: #f0efe9; color: var(--muted); cursor: default; border-color: transparent; }
+
+  /* ── Deduction Card ── */
+  .deduction-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 2rem;
+  }
+
+  .deduction-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .deduction-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .deduction-total {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: #eef2ff;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .deduction-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+  }
+
+  .ded-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .ded-item label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .ded-item input {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #fafaf8;
+    outline: none;
+    width: 70px;
+    text-align: right;
+  }
+
+  .ded-item input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37,99,235,0.08); }
+  .ded-item input[readonly] { background: #f0efe9; color: var(--muted); cursor: default; border-color: transparent; }
 
   /* ── Results Section ── */
   .results-section { margin-bottom: 2rem; }
@@ -244,6 +278,39 @@
   .proof-formula .result .step-value {
     font-size: 0.95rem;
     color: var(--text);
+  }
+
+  .proof-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .proof-total-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .proof-total-value {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .proof-breakdown {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .proof-breakdown span {
+    font-weight: 500;
   }
 
   .proof-toggle {
@@ -443,53 +510,42 @@
 <body>
 <div class="container">
   <header>
-    <h1>路特薪酬方案设计辅助工具</h1>
-    <p>累计预扣预缴法 · 年终奖单独计税 · 专项附加扣除 1,500/月（租房）</p>
+    <h1>个税计算对比工具</h1>
+    <p>累计预扣预缴法（含季度奖金） · 一次性奖金单独计税 · 专项附加扣除自定义配置</p>
   </header>
 
   <!-- ── Inputs ── -->
   <div class="input-section">
     <!-- Old Company (locked) -->
     <div class="company-card old">
-      <h2 style="justify-content:space-between">
-        <span><span class="dot"></span>晨北</span>
-        <span class="mode-toggle">
-          <label><input type="radio" name="o_mode" value="default" checked onchange="toggleOldMode()"> 默认</label>
-          <label><input type="radio" name="o_mode" value="custom" onchange="toggleOldMode()"> 自定义</label>
-        </span>
-      </h2>
-      <div class="basic-row">
+      <h2><span class="dot"></span>旧薪资</h2>
+      <div class="basic-row basic-row-2col">
         <div class="fg">
           <label>月薪 Base</label>
-          <input type="number" id="o_base" value="31550" readonly>
+          <input type="number" id="o_base" value="31550">
         </div>
         <div class="fg">
           <label>年终奖（月数）</label>
-          <input type="number" id="o_bonus" value="3" readonly>
-        </div>
-        <div class="fg">
-          <label>专项附加扣除</label>
-          <input type="number" id="o_special" value="1500" readonly>
-          <span class="unit">元/月（租房）</span>
+          <input type="number" id="o_bonus" value="3" step="1" min="0">
         </div>
       </div>
       <table class="ins-table">
         <thead><tr><th>项目</th><th>缴费基数</th><th>个人%</th><th>单位%</th></tr></thead>
         <tbody>
-          <tr><td>养老</td><td><input id="o_pen_b" type="number" value="27549" readonly></td><td><input id="o_pen_p" type="number" value="8" readonly></td><td><input id="o_pen_e" type="number" value="17" readonly></td></tr>
-          <tr><td>医疗</td><td><input id="o_med_b" type="number" value="31020" readonly></td><td><input id="o_med_p" type="number" value="2" readonly></td><td><input id="o_med_e" type="number" value="6" readonly></td></tr>
-          <tr><td>失业</td><td><input id="o_unemp_b" type="number" value="31020" readonly></td><td><input id="o_unemp_p" type="number" value="0.2" readonly></td><td><input id="o_unemp_e" type="number" value="0.8" readonly></td></tr>
-          <tr><td>工伤</td><td><input id="o_inj_b" type="number" value="31020" readonly></td><td><input id="o_inj_p" type="number" value="0" readonly></td><td><input id="o_inj_e" type="number" value="0.4" readonly></td></tr>
-          <tr><td>生育</td><td><input id="o_mat_b" type="number" value="31020" readonly></td><td><input id="o_mat_p" type="number" value="0.2" readonly></td><td><input id="o_mat_e" type="number" value="0.5" readonly></td></tr>
-          <tr><td style="font-weight:700">公积金</td><td><input id="o_gjj_b" type="number" value="40906" readonly></td><td colspan="2" style="text-align:center"><input id="o_gjj_r" type="number" value="7" readonly style="width:60%; text-align:center"> <span style="font-size:0.72rem;color:var(--muted)">%（个人=单位）</span></td></tr>
+          <tr><td>养老</td><td><input id="o_pen_b" type="number" value="27549"></td><td><input id="o_pen_p" type="number" value="8" readonly></td><td><input id="o_pen_e" type="number" value="17" readonly></td></tr>
+          <tr><td>医疗</td><td><input id="o_med_b" type="number" value="31020"></td><td><input id="o_med_p" type="number" value="2" readonly></td><td><input id="o_med_e" type="number" value="6" readonly></td></tr>
+          <tr><td>失业</td><td><input id="o_unemp_b" type="number" value="31020"></td><td><input id="o_unemp_p" type="number" value="0.2" readonly></td><td><input id="o_unemp_e" type="number" value="0.8" readonly></td></tr>
+          <tr><td>工伤</td><td><input id="o_inj_b" type="number" value="31020"></td><td><input id="o_inj_p" type="number" value="0" readonly></td><td><input id="o_inj_e" type="number" value="0.4" readonly></td></tr>
+          <tr><td>生育</td><td><input id="o_mat_b" type="number" value="31020"></td><td><input id="o_mat_p" type="number" value="0.2" readonly></td><td><input id="o_mat_e" type="number" value="0.5" readonly></td></tr>
+          <tr><td style="font-weight:700">公积金</td><td><input id="o_gjj_b" type="number" value="40906"></td><td><input id="o_gjj_p" type="number" value="7"></td><td><input id="o_gjj_e" type="number" value="7"></td></tr>
         </tbody>
       </table>
     </div>
 
     <!-- New Company -->
     <div class="company-card new">
-      <h2><span class="dot"></span>路特</h2>
-      <div class="basic-row">
+      <h2><span class="dot"></span>新薪资</h2>
+      <div class="basic-row basic-row-2col">
         <div class="fg">
           <label>月薪 Base</label>
           <input type="number" id="n_base" value="42000" step="100">
@@ -498,47 +554,43 @@
           <label>年终奖（月数）</label>
           <input type="number" id="n_bonus" value="3" step="1" min="0">
         </div>
-        <div class="fg">
-          <label>专项附加扣除</label>
-          <input type="number" id="n_special" value="1500" readonly>
-          <span class="unit">元/月（租房）</span>
-        </div>
-      </div>
-      <div class="base-mode-bar">
-        <span class="base-mode-label">缴费基数</span>
-        <span class="mode-toggle">
-          <label><input type="radio" name="n_base_mode" value="5000" onchange="syncNewInsuranceBase();calculate()"> 5,000</label>
-          <label><input type="radio" name="n_base_mode" value="50" checked onchange="syncNewInsuranceBase();calculate()"> 50%</label>
-          <label><input type="radio" name="n_base_mode" value="100" onchange="syncNewInsuranceBase();calculate()"> 100%</label>
-        </span>
       </div>
       <table class="ins-table">
         <thead><tr><th>项目</th><th>缴费基数</th><th>个人%</th><th>单位%</th></tr></thead>
         <tbody>
-          <tr><td>养老</td><td><input id="n_pen_b" type="number" readonly></td><td><input id="n_pen_p" type="number" value="8" readonly></td><td><input id="n_pen_e" type="number" value="17" readonly></td></tr>
-          <tr><td>医疗</td><td><input id="n_med_b" type="number" readonly></td><td><input id="n_med_p" type="number" value="2" readonly></td><td><input id="n_med_e" type="number" value="6" readonly></td></tr>
-          <tr><td>失业</td><td><input id="n_unemp_b" type="number" readonly></td><td><input id="n_unemp_p" type="number" value="0.2" readonly></td><td><input id="n_unemp_e" type="number" value="0.8" readonly></td></tr>
-          <tr><td>工伤</td><td><input id="n_inj_b" type="number" readonly></td><td><input id="n_inj_p" type="number" value="0" readonly></td><td><input id="n_inj_e" type="number" value="0.4" readonly></td></tr>
-          <tr><td>生育</td><td><input id="n_mat_b" type="number" readonly></td><td><input id="n_mat_p" type="number" value="0.2" readonly></td><td><input id="n_mat_e" type="number" value="0.5" readonly></td></tr>
-          <tr><td style="font-weight:700">公积金</td><td><input id="n_gjj_b" type="number" readonly></td><td colspan="2" style="text-align:center"><input id="n_gjj_r" type="number" value="5" readonly style="width:60%; text-align:center"> <span style="font-size:0.72rem;color:var(--muted)">%（个人=单位）</span></td></tr>
+          <tr><td>养老</td><td><input id="n_pen_b" type="number" value="5000"></td><td><input id="n_pen_p" type="number" value="8" readonly></td><td><input id="n_pen_e" type="number" value="17" readonly></td></tr>
+          <tr><td>医疗</td><td><input id="n_med_b" type="number" value="5000"></td><td><input id="n_med_p" type="number" value="2" readonly></td><td><input id="n_med_e" type="number" value="6" readonly></td></tr>
+          <tr><td>失业</td><td><input id="n_unemp_b" type="number" value="5000"></td><td><input id="n_unemp_p" type="number" value="0.2" readonly></td><td><input id="n_unemp_e" type="number" value="0.8" readonly></td></tr>
+          <tr><td>工伤</td><td><input id="n_inj_b" type="number" value="5000"></td><td><input id="n_inj_p" type="number" value="0" readonly></td><td><input id="n_inj_e" type="number" value="0.4" readonly></td></tr>
+          <tr><td>生育</td><td><input id="n_mat_b" type="number" value="5000"></td><td><input id="n_mat_p" type="number" value="0.2" readonly></td><td><input id="n_mat_e" type="number" value="0.5" readonly></td></tr>
+          <tr><td style="font-weight:700">公积金</td><td><input id="n_gjj_b" type="number" value="5000"></td><td><input id="n_gjj_p" type="number" value="5"></td><td><input id="n_gjj_e" type="number" value="5"></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ── Results ── -->
-  <div class="results-section">
-    <div class="cmp-card">
-      <h3>年度薪酬明细对比</h3>
-      <div class="cmp-wrap"><table class="cmp" id="cmpTable"></table></div>
+  <!-- ── 专项附加扣除 ── -->
+  <div class="deduction-card">
+    <div class="deduction-header">
+      <span class="deduction-title">专项附加扣除</span>
+      <span class="deduction-total">合计 <span id="deductionTotal">1,500</span> 元/月</span>
     </div>
-
-    <!-- 逐月个税明细 -->
-    <div class="calc-proof" id="calcProof" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-top:1.25rem;"></div>
+    <div class="deduction-grid">
+      <div class="ded-item"><label>子女教育</label><input type="number" id="ded_child" value="0" min="0" step="100"></div>
+      <div class="ded-item"><label>继续教育</label><input type="number" id="ded_edu" value="0" min="0" step="100"></div>
+      <div class="ded-item"><label>大病医疗</label><input type="number" id="ded_medical" value="0" min="0" step="100"></div>
+      <div class="ded-item"><label>住房贷款利息</label><input type="number" id="ded_mortgage" value="0" min="0" step="100"></div>
+      <div class="ded-item"><label>住房租金</label><input type="number" id="ded_rent" value="1500" readonly></div>
+      <div class="ded-item"><label>赡养老人</label><input type="number" id="ded_elderly" value="0" min="0" step="100"></div>
+      <div class="ded-item"><label>婴幼儿照护</label><input type="number" id="ded_baby" value="0" min="0" step="100"></div>
+    </div>
   </div>
 
+  <!-- ── 逐月个税明细 ── -->
+  <div class="calc-proof" id="calcProof" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:2rem;"></div>
+
   <div class="footer">
-    个税按累计预扣预缴法计算 · 年终奖单独计税（政策延至 2027 年底） · 基本减除费用 5,000 元/月 · 专项附加扣除 1,500 元/月
+    个税按累计预扣预缴法计算 · 年终奖单独计税（政策延至 2027 年底） · 基本减除费用 5,000 元/月 · 专项附加扣除见顶部配置
   </div>
 </div>
 
@@ -554,7 +606,15 @@ const BONUS_BRACKETS = [
   [Infinity, 0.45, 15160],
 ];
 
-const SPECIAL_DEDUCTION = 1500;
+function getSpecialDeduction() {
+  return ['ded_child','ded_edu','ded_medical','ded_mortgage','ded_rent','ded_elderly','ded_baby']
+    .reduce((s, id) => s + (parseFloat(document.getElementById(id).value) || 0), 0);
+}
+
+function updateDeductionTotal() {
+  const total = getSpecialDeduction();
+  document.getElementById('deductionTotal').textContent = total.toLocaleString('zh-CN');
+}
 
 function cumTax(taxable) {
   if (taxable <= 0) return { tax: 0, rate: 0 };
@@ -577,31 +637,6 @@ function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function fmt(n) { return n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function fmtI(n) { return Math.round(n).toLocaleString('zh-CN'); }
 
-const OLD_DEFAULTS = {
-  o_base: 31550, o_bonus: 3, o_special: 1500,
-  o_pen_b: 27549, o_pen_p: 8, o_pen_e: 17,
-  o_med_b: 31020, o_med_p: 2, o_med_e: 6,
-  o_unemp_b: 31020, o_unemp_p: 0.2, o_unemp_e: 0.8,
-  o_inj_b: 31020, o_inj_p: 0, o_inj_e: 0.4,
-  o_mat_b: 31020, o_mat_p: 0.2, o_mat_e: 0.5,
-  o_gjj_b: 40906, o_gjj_r: 7,
-};
-
-function toggleOldMode() {
-  const isDefault = document.querySelector('input[name="o_mode"]:checked').value === 'default';
-  const card = document.querySelector('.company-card.old');
-  const inputs = card.querySelectorAll('input[type="number"]');
-  inputs.forEach(inp => {
-    if (isDefault) {
-      if (OLD_DEFAULTS[inp.id] !== undefined) inp.value = OLD_DEFAULTS[inp.id];
-      inp.readOnly = true;
-    } else {
-      inp.readOnly = false;
-    }
-  });
-  calculate();
-}
-
 function calcCompany(prefix) {
   const p = prefix;
   const base = v(p + '_base');
@@ -615,41 +650,58 @@ function calcCompany(prefix) {
     { b: v(p+'_mat_b'),   pr: v(p+'_mat_p')/100,   er: v(p+'_mat_e')/100 },
   ];
   const gjjBase = v(p + '_gjj_b');
-  const gjjRate = v(p + '_gjj_r') / 100;
+  const gjjPRate = v(p + '_gjj_p') / 100;
+  const gjjERate = v(p + '_gjj_e') / 100;
 
   const personalInsurance = items.reduce((s, i) => s + i.b * i.pr, 0);
   const employerInsurance = items.reduce((s, i) => s + i.b * i.er, 0);
-  const personalGjj = gjjBase * gjjRate;
-  const employerGjj = gjjBase * gjjRate;
+  const personalGjj = gjjBase * gjjPRate;
+  const employerGjj = gjjBase * gjjERate;
 
   const personalTotal = personalInsurance + personalGjj;
   const employerTotal = employerInsurance + employerGjj;
 
-  const bonus = base * bonusMonths;
-  const annualGross = base * 12 + bonus;
+  const quarterlyBonusMonths = Math.min(bonusMonths, 2);
+  const yearEndBonusMonths = Math.max(0, bonusMonths - 2);
+  const quarterlyBonusPer = base * (quarterlyBonusMonths / 4);
+  const yearEndBonus = base * yearEndBonusMonths;
+  const totalBonus = base * bonusMonths;
+  const annualGross = base * 12 + totalBonus;
 
-  // 累计预扣预缴
+  const quarterlyMonths = [3, 6, 9, 12];
+  const specialDed = getSpecialDeduction();
+
+  // 累计预扣预缴（季度奖金并入当月工资）
   let prevCumTax = 0;
   let totalSalaryTax = 0;
+  let cumIncome = 0;
   const monthlyDetails = [];
   for (let m = 1; m <= 12; m++) {
-    const cumTaxable = (base - personalTotal - 5000 - SPECIAL_DEDUCTION) * m;
+    let monthIncome = base;
+    const hasQuarterlyBonus = quarterlyMonths.includes(m);
+    if (hasQuarterlyBonus) monthIncome += quarterlyBonusPer;
+    cumIncome += monthIncome;
+    const cumTaxable = cumIncome - personalTotal * m - 5000 * m - specialDed * m;
     const { tax: ct, rate } = cumTax(cumTaxable);
     const monthTax = Math.max(0, ct - prevCumTax);
-    monthlyDetails.push({ month: m, tax: monthTax, rate, takeHome: base - personalTotal - monthTax });
+    monthlyDetails.push({
+      month: m, tax: monthTax, rate,
+      income: monthIncome, hasQuarterlyBonus,
+    });
     prevCumTax = ct;
     totalSalaryTax += monthTax;
   }
 
-  const { tax: bTax, rate: bRate } = bonusTax(bonus);
+  // 次年1月年终奖单独计税
+  const { tax: bTax, rate: bRate } = bonusTax(yearEndBonus);
   const totalTax = totalSalaryTax + bTax;
-  const annualCash = annualGross - personalInsurance * 12 - totalTax;
+  const annualCash = annualGross - personalTotal * 12 - totalTax;
 
   // 最高边际税率
   const maxRate = monthlyDetails.length > 0 ? monthlyDetails[monthlyDetails.length - 1].rate : 0;
 
   return {
-    base, bonusMonths, bonus, annualGross,
+    base, bonusMonths, totalBonus, yearEndBonus, quarterlyBonusPer, annualGross,
     personalInsurance, employerInsurance,
     personalGjj, employerGjj,
     personalTotal, employerTotal,
@@ -688,118 +740,62 @@ function calculate() {
 
   // ── Monthly Detail Proof ──
   function renderMonthlyProof(c, label, cls) {
+    const totalMonthlyTax = c.monthlyDetails.reduce((s, d) => s + d.tax, 0);
+    const specialDed = getSpecialDeduction();
+
     let monthlyHTML = `<table><thead><tr>
-      <th>月份</th><th>累计应纳税所得</th><th>税率</th><th>当月个税</th><th>当月到手</th>
+      <th>月份</th><th>当月收入</th><th>累计应纳税所得</th><th>税率</th><th>当月个税</th>
     </tr></thead><tbody>`;
 
     let prevRate = 0;
+    let cumIncome = 0;
     for (const d of c.monthlyDetails) {
-      const cumTaxable = (c.base - c.personalTotal - 5000 - SPECIAL_DEDUCTION) * d.month;
+      cumIncome += d.income;
+      const cumTaxable = cumIncome - c.personalTotal * d.month - 5000 * d.month - specialDed * d.month;
       const ratePct = (d.rate * 100).toFixed(0);
       const bCls = 'b' + ratePct;
       const jump = d.rate > prevRate && d.month > 1;
+      const bonusMark = d.hasQuarterlyBonus ? ' *' : '';
       monthlyHTML += `<tr${jump ? ' class="bracket-jump"' : ''}>
-        <td>${d.month}月</td>
+        <td>${d.month}月${bonusMark}</td>
+        <td>${fmt(d.income)}</td>
         <td>${fmt(Math.max(0, cumTaxable))}</td>
         <td><span class="bracket-tag ${bCls}">${ratePct}%</span></td>
         <td>${fmt(d.tax)}</td>
-        <td>${fmt(d.takeHome)}</td>
       </tr>`;
       prevRate = d.rate;
     }
-    monthlyHTML += '</tbody></table>';
+    monthlyHTML += `</tbody></table>`;
+
+    const bRatePct = (c.bRate * 100).toFixed(0);
+    const bCls = 'b' + bRatePct;
 
     return `<div class="proof-card ${cls}">
       <h3><span class="dot"></span>${label}</h3>
+      <div class="proof-total">
+        <span class="proof-total-label">年度个税合计</span>
+        <span class="proof-total-value">${fmt(c.totalTax)}</span>
+      </div>
+      <div class="proof-breakdown">
+        <span>工资个税 ${fmt(totalMonthlyTax)}</span>
+        <span>一次性奖金个税 ${fmt(c.bTax)}${c.yearEndBonus > 0 ? `（${fmt(c.yearEndBonus)} × <span class="bracket-tag ${bCls}">${bRatePct}%</span>）` : ''}</span>
+      </div>
       <details class="proof-toggle" open>
-        <summary>1～12 月逐月个税明细</summary>
+        <summary>1～12 月逐月个税明细（* 含季度奖金）</summary>
         ${monthlyHTML}
       </details>
     </div>`;
   }
 
   document.getElementById('calcProof').innerHTML =
-    renderMonthlyProof(o, '晨北', 'old') + renderMonthlyProof(n, '路特', 'new');
-
-  // ── Comparison Table ──
-  function row(label, oldVal, newVal, opts = {}) {
-    const diff = newVal - oldVal;
-    const { invert, isKey, unit = '' } = opts;
-    const cls = isKey ? ' class="key-metric"' : '';
-    const diffCls = diff === 0 ? '' : ((invert ? diff < 0 : diff > 0) ? 'diff-up' : 'diff-down');
-    const sign = diff > 0 ? '+' : '';
-    return `<tr${cls}>
-      <td>${label}</td>
-      <td>${fmt(oldVal)}${unit}</td>
-      <td>${fmt(newVal)}${unit}</td>
-      <td class="${diffCls}">${sign}${fmt(diff)}</td>
-      <td>${pctTag(oldVal, newVal, invert)}</td>
-    </tr>`;
-  }
-
-  function sectionRow(label) {
-    return `<tr class="section-header"><td colspan="5">${label}</td></tr>`;
-  }
-
-  let html = `<thead><tr>
-    <th style="width:28%">项目</th>
-    <th class="col-old" style="width:18%">晨北</th>
-    <th class="col-new" style="width:18%">路特</th>
-    <th style="width:18%">差额</th>
-    <th style="width:18%">变化</th>
-  </tr></thead><tbody>`;
-
-  html += sectionRow('税前收入');
-
-  const oPreCash = o.annualGross;
-  const nPreCash = n.annualGross;
-  html += row('base收入', oPreCash, nPreCash, { isKey: true });
-
-  const oPreCashGjj = oPreCash + o.annualEmployerGjj;
-  const nPreCashGjj = nPreCash + n.annualEmployerGjj;
-  html += row('base收入 + 公积金（单位缴纳）', oPreCashGjj, nPreCashGjj, { isKey: true });
-
-  const oPreCashAll = oPreCash + o.annualEmployerContributions;
-  const nPreCashAll = nPreCash + n.annualEmployerContributions;
-  html += row('base收入 + 五险一金（单位缴纳）', oPreCashAll, nPreCashAll, { isKey: true });
-
-  html += sectionRow('税后收入');
-  html += row('base收入', o.annualCash, n.annualCash, { isKey: true });
-
-  const oCashGjj = o.annualCash + o.annualEmployerGjj;
-  const nCashGjj = n.annualCash + n.annualEmployerGjj;
-  html += row('base收入 + 公积金（单位缴纳）', oCashGjj, nCashGjj, { isKey: true });
-
-  const oCashAll = o.annualCash + o.annualEmployerContributions;
-  const nCashAll = n.annualCash + n.annualEmployerContributions;
-  html += row('base收入 + 五险一金（单位缴纳）', oCashAll, nCashAll, { isKey: true });
-
-  html += sectionRow('五险一金（单位缴纳）');
-  html += row('五险', o.annualEmployerInsurance, n.annualEmployerInsurance, { isKey: true });
-  html += row('公积金', o.annualEmployerGjj, n.annualEmployerGjj, { isKey: true });
-  html += row('合计', o.annualEmployerContributions, n.annualEmployerContributions);
-
-  html += '</tbody>';
-  document.getElementById('cmpTable').innerHTML = html;
-}
-
-function syncNewInsuranceBase() {
-  const mode = document.querySelector('input[name="n_base_mode"]:checked').value;
-  const salary = v('n_base');
-  let base;
-  if (mode === '5000') base = 5000;
-  else if (mode === '100') base = Math.round(salary);
-  else base = Math.round(salary * 0.5);
-  ['n_pen_b','n_med_b','n_unemp_b','n_inj_b','n_mat_b','n_gjj_b'].forEach(id => {
-    document.getElementById(id).value = base;
-  });
+    renderMonthlyProof(o, '旧薪资', 'old') + renderMonthlyProof(n, '新薪资', 'new');
 }
 
 document.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', () => {
-  syncNewInsuranceBase();
+  updateDeductionTotal();
   calculate();
 }));
-syncNewInsuranceBase();
+updateDeductionTotal();
 calculate();
 </script>
 </body>
