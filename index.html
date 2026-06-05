@@ -522,22 +522,22 @@
       <div class="basic-row basic-row-2col">
         <div class="fg">
           <label>月薪 Base</label>
-          <input type="number" id="o_base" value="31550">
+          <input type="number" id="o_base">
         </div>
         <div class="fg">
           <label>年终奖（月数）</label>
-          <input type="number" id="o_bonus" value="3" step="1" min="0">
+          <input type="number" id="o_bonus" step="1" min="0">
         </div>
       </div>
       <table class="ins-table">
         <thead><tr><th>项目</th><th>缴费基数</th><th>个人%</th><th>单位%</th></tr></thead>
         <tbody>
-          <tr><td>养老</td><td><input id="o_pen_b" type="number" value="27549"></td><td><input id="o_pen_p" type="number" value="8" readonly></td><td><input id="o_pen_e" type="number" value="17" readonly></td></tr>
-          <tr><td>医疗</td><td><input id="o_med_b" type="number" value="31020"></td><td><input id="o_med_p" type="number" value="2" readonly></td><td><input id="o_med_e" type="number" value="6" readonly></td></tr>
-          <tr><td>失业</td><td><input id="o_unemp_b" type="number" value="31020"></td><td><input id="o_unemp_p" type="number" value="0.2" readonly></td><td><input id="o_unemp_e" type="number" value="0.8" readonly></td></tr>
-          <tr><td>工伤</td><td><input id="o_inj_b" type="number" value="31020"></td><td><input id="o_inj_p" type="number" value="0" readonly></td><td><input id="o_inj_e" type="number" value="0.4" readonly></td></tr>
-          <tr><td>生育</td><td><input id="o_mat_b" type="number" value="31020"></td><td><input id="o_mat_p" type="number" value="0.2" readonly></td><td><input id="o_mat_e" type="number" value="0.5" readonly></td></tr>
-          <tr><td style="font-weight:700">公积金</td><td><input id="o_gjj_b" type="number" value="40906"></td><td><input id="o_gjj_p" type="number" value="7"></td><td><input id="o_gjj_e" type="number" value="7"></td></tr>
+          <tr><td>养老</td><td><input id="o_pen_b" type="number"></td><td><input id="o_pen_p" type="number" value="8" readonly></td><td><input id="o_pen_e" type="number" value="17" readonly></td></tr>
+          <tr><td>医疗</td><td><input id="o_med_b" type="number"></td><td><input id="o_med_p" type="number" value="2" readonly></td><td><input id="o_med_e" type="number" value="6" readonly></td></tr>
+          <tr><td>失业</td><td><input id="o_unemp_b" type="number"></td><td><input id="o_unemp_p" type="number" value="0.2" readonly></td><td><input id="o_unemp_e" type="number" value="0.8" readonly></td></tr>
+          <tr><td>工伤</td><td><input id="o_inj_b" type="number"></td><td><input id="o_inj_p" type="number" value="0" readonly></td><td><input id="o_inj_e" type="number" value="0.4" readonly></td></tr>
+          <tr><td>生育</td><td><input id="o_mat_b" type="number"></td><td><input id="o_mat_p" type="number" value="0.2" readonly></td><td><input id="o_mat_e" type="number" value="0.5" readonly></td></tr>
+          <tr><td style="font-weight:700">公积金</td><td><input id="o_gjj_b" type="number"></td><td><input id="o_gjj_p" type="number"></td><td><input id="o_gjj_e" type="number"></td></tr>
         </tbody>
       </table>
     </div>
@@ -548,22 +548,22 @@
       <div class="basic-row basic-row-2col">
         <div class="fg">
           <label>月薪 Base</label>
-          <input type="number" id="n_base" value="42000" step="100">
+          <input type="number" id="n_base" step="100">
         </div>
         <div class="fg">
           <label>年终奖（月数）</label>
-          <input type="number" id="n_bonus" value="3" step="1" min="0">
+          <input type="number" id="n_bonus" step="1" min="0">
         </div>
       </div>
       <table class="ins-table">
         <thead><tr><th>项目</th><th>缴费基数</th><th>个人%</th><th>单位%</th></tr></thead>
         <tbody>
-          <tr><td>养老</td><td><input id="n_pen_b" type="number" value="5000"></td><td><input id="n_pen_p" type="number" value="8" readonly></td><td><input id="n_pen_e" type="number" value="17" readonly></td></tr>
-          <tr><td>医疗</td><td><input id="n_med_b" type="number" value="5000"></td><td><input id="n_med_p" type="number" value="2" readonly></td><td><input id="n_med_e" type="number" value="6" readonly></td></tr>
-          <tr><td>失业</td><td><input id="n_unemp_b" type="number" value="5000"></td><td><input id="n_unemp_p" type="number" value="0.2" readonly></td><td><input id="n_unemp_e" type="number" value="0.8" readonly></td></tr>
-          <tr><td>工伤</td><td><input id="n_inj_b" type="number" value="5000"></td><td><input id="n_inj_p" type="number" value="0" readonly></td><td><input id="n_inj_e" type="number" value="0.4" readonly></td></tr>
-          <tr><td>生育</td><td><input id="n_mat_b" type="number" value="5000"></td><td><input id="n_mat_p" type="number" value="0.2" readonly></td><td><input id="n_mat_e" type="number" value="0.5" readonly></td></tr>
-          <tr><td style="font-weight:700">公积金</td><td><input id="n_gjj_b" type="number" value="5000"></td><td><input id="n_gjj_p" type="number" value="5"></td><td><input id="n_gjj_e" type="number" value="5"></td></tr>
+          <tr><td>养老</td><td><input id="n_pen_b" type="number"></td><td><input id="n_pen_p" type="number" value="8" readonly></td><td><input id="n_pen_e" type="number" value="17" readonly></td></tr>
+          <tr><td>医疗</td><td><input id="n_med_b" type="number"></td><td><input id="n_med_p" type="number" value="2" readonly></td><td><input id="n_med_e" type="number" value="6" readonly></td></tr>
+          <tr><td>失业</td><td><input id="n_unemp_b" type="number"></td><td><input id="n_unemp_p" type="number" value="0.2" readonly></td><td><input id="n_unemp_e" type="number" value="0.8" readonly></td></tr>
+          <tr><td>工伤</td><td><input id="n_inj_b" type="number"></td><td><input id="n_inj_p" type="number" value="0" readonly></td><td><input id="n_inj_e" type="number" value="0.4" readonly></td></tr>
+          <tr><td>生育</td><td><input id="n_mat_b" type="number"></td><td><input id="n_mat_p" type="number" value="0.2" readonly></td><td><input id="n_mat_e" type="number" value="0.5" readonly></td></tr>
+          <tr><td style="font-weight:700">公积金</td><td><input id="n_gjj_b" type="number"></td><td><input id="n_gjj_p" type="number"></td><td><input id="n_gjj_e" type="number"></td></tr>
         </tbody>
       </table>
     </div>
